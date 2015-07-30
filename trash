@@ -10,6 +10,11 @@ if [ -z ${ARG1} ]; then
   exit
 fi
 
+if [ ${ARG1} = "--clean" ]; then
+  find ${TRASH} -maxdepth 1 -regex "${TRASH}/.+" -exec rm -rf {} \;
+  exit
+fi
+
 if [ ! -d ${TRASH} ]; then
   mkdir ${TRASH}
 fi
