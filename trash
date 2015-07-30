@@ -14,14 +14,19 @@ if [ ! -d ${TRASH} ]; then
   mkdir ${TRASH}
 fi
 
-for file in ${TARGET}
-do
-  if [ -f ${file} ]; then
-    echo "'${file}' is move to Trash."
-    mv -f ${file} "${HOME}/.Trash/"
+for file in ${TARGET} ; do
+  if [ -e ${file} ]; then
+    fname=${file}
+    loop=1
+    while [ -e "${HOME}/.Trash/${fname}" ]; do
+      fname="${file}.${loop}"
+      loop=$((loop+1))
+    done
+    echo "'${file}' is move to Trash.: ${fname}"
+    mv -f ${file} "${HOME}/.Trash/${fname}"
   else
     echo "file not found: ${TARGET}"
   fi
 done
 
-find "${HOME}/.Trash" -ctime +30 -exec rm -rf {} \;
+find ${TRASH} -maxdepth 1 -regex "${TRASH}/.+" -ctime 0 -exec rm -rf {} \;
