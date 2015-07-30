@@ -19,10 +19,9 @@ do
   if [ -f ${file} ]; then
     echo "'${file}' is move to Trash."
     mv -f ${file} "${HOME}/.Trash/"
-    touch -t `date +%Y%m%d%H%M` "${HOME}/.Trash/${file}"
   else
     echo "file not found: ${TARGET}"
   fi
 done
 
-find "${HOME}/.Trash" -mtime +30 -exec rm -rf {} \;
+find "${HOME}/.Trash" -ctime +30 -exec rm -rf {} \;
