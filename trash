@@ -29,4 +29,4 @@ for file in ${TARGET} ; do
   fi
 done
 
-find ${TRASH} -maxdepth 1 -regex "${TRASH}/.+" -ctime 0 -exec rm -rf {} \;
+find ${TRASH} -maxdepth 1 -regex "${TRASH}/.+" -ctime +30 -exec rm -rf {} \;
