@@ -3,8 +3,9 @@
 HOME=`echo ~`
 TRASH="${HOME}/.Trash"
 TARGET="$@"
+ARG1="$1"
 
-if [ -z ${TARGET} ]; then
+if [ -z ${ARG1} ]; then
   echo "trash [delete file name]"
   exit
 fi
@@ -13,11 +14,15 @@ if [ ! -d ${TRASH} ]; then
   mkdir ${TRASH}
 fi
 
-if [ -e ${TARGET} ]; then
-  echo "'${TARGET}' is move to Trash."
-  mv -f ${TARGET} "${HOME}/.Trash/"
-else
-  echo "file not found: ${TARGET}"
-fi
+for file in ${TARGET}
+do
+  if [ -f ${file} ]; then
+    echo "'${file}' is move to Trash."
+    mv -f ${file} "${HOME}/.Trash/"
+    touch -t `date +%Y%m%d%H%M` "${HOME}/.Trash/${file}"
+  else
+    echo "file not found: ${TARGET}"
+  fi
+done
 
-find "$HOME/.Trash" -mtime +30 -exec rm -rf {} \;
+find "${HOME}/.Trash" -mtime +30 -exec rm -rf {} \;
