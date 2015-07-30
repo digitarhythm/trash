@@ -1,0 +1,23 @@
+#!/bin/bash
+
+HOME=`echo ~`
+TRASH="${HOME}/.Trash"
+TARGET="$@"
+
+if [ -z ${TARGET} ]; then
+  echo "trash [delete file name]"
+  exit
+fi
+
+if [ ! -d ${TRASH} ]; then
+  mkdir ${TRASH}
+fi
+
+if [ -e ${TARGET} ]; then
+  echo "'${TARGET}' is move to Trash."
+  mv -f ${TARGET} "${HOME}/.Trash/"
+else
+  echo "file not found: ${TARGET}"
+fi
+
+find "$HOME/.Trash" -mtime +30 -exec rm -rf {} \;
