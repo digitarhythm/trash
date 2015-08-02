@@ -23,9 +23,15 @@ fi
 
 for file in ${TARGET} ; do
   if [ -e ${file} ]; then
-    if [[ ${file} =~ ^(.*?)\/$ ]]; then
+    org=${file}
+    if [[ ${file} =~ ^(.*)\/$ ]]; then
       file=${BASH_REMATCH[1]}
     fi
+    echo "file1=${file}"
+    if [[ ${file} =~ ^.*\/(.*?) ]]; then
+      file=${BASH_REMATCH[1]}
+    fi
+    echo "file2=${file}"
     fname=${file}
     loop=1
     while [ -e "${TRASH}/${fname}" ]; do
@@ -33,7 +39,7 @@ for file in ${TARGET} ; do
       loop=$((loop+1))
     done
     echo "'${file}' is move to Trash.: ${fname}"
-    mv -f ${file} "${TRASH}/${fname}"
+    mv -f ${org} "${TRASH}/${fname}"
   else
     echo "file not found: ${TARGET}"
   fi
