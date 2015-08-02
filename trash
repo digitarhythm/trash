@@ -27,11 +27,9 @@ for file in ${TARGET} ; do
     if [[ ${file} =~ ^(.*)\/$ ]]; then
       file=${BASH_REMATCH[1]}
     fi
-    echo "file1=${file}"
     if [[ ${file} =~ ^.*\/(.*?) ]]; then
       file=${BASH_REMATCH[1]}
     fi
-    echo "file2=${file}"
     fname=${file}
     loop=1
     while [ -e "${TRASH}/${fname}" ]; do
