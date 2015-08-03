@@ -3,18 +3,18 @@
 HOME=`echo ~`
 TRASH="${HOME}/.Trash"
 TARGET="$@"
-ARG1="$1"
+ARGS=(`echo "$@"`)
+CLEAN=0
 
-if [ -z ${ARG1} ]; then
+if [ -z "${ARGS[0]}" ]; then
   echo "Usage: trash [option] [delete file name]"
   echo "option:"
   echo "  --clean    delete all files in .Trash directory."
   exit
 fi
 
-if [ ${ARG1} = "--clean" ]; then
-  find ${TRASH} -maxdepth 1 -regex "${TRASH}/.+" -exec rm -rf {} \;
-  exit
+if [ "${ARGS[0]}" = "--clean" ]; then
+  CLEAN=1
 fi
 
 if [ ! -d ${TRASH} ]; then
@@ -22,25 +22,37 @@ if [ ! -d ${TRASH} ]; then
 fi
 
 for file in ${TARGET} ; do
-  if [ -e ${file} ]; then
-    org=${file}
-    if [[ ${file} =~ ^(.*)\/$ ]]; then
-      file=${BASH_REMATCH[1]}
+  if [[ ! ${file} =~ ^-.*$ ]]; then
+    if [ -e ${file} ]; then
+      org=${file}
+      if [[ ${file} =~ ^(.*)\/$ ]]; then
+        file=${BASH_REMATCH[1]}
+      fi
+      if [[ ${file} =~ ^.*\/(.*?) ]]; then
+        file=${BASH_REMATCH[1]}
+      fi
+      fname=${file}
+      loop=1
+      while [ -e "${TRASH}/${fname}" ]; do
+        fname="${file}.${loop}"
+        loop=$((loop+1))
+      done
+      if [ ${CLEAN} -eq 0 ]; then
+        echo "'${file}' is move to Trash.: ${fname}"
+      else
+        echo "'${file}' is move to Trash and clean \".Trash\"."
+      fi
+      mv -f ${org} "${TRASH}/${fname}"
+    else
+      echo "file not found: ${file}"
     fi
-    if [[ ${file} =~ ^.*\/(.*?) ]]; then
-      file=${BASH_REMATCH[1]}
-    fi
-    fname=${file}
-    loop=1
-    while [ -e "${TRASH}/${fname}" ]; do
-      fname="${file}.${loop}"
-      loop=$((loop+1))
-    done
-    echo "'${file}' is move to Trash.: ${fname}"
-    mv -f ${org} "${TRASH}/${fname}"
-  else
-    echo "file not found: ${TARGET}"
   fi
 done
 
-find ${TRASH} -maxdepth 1 -regex "${TRASH}/.+" -ctime +30 -exec rm -rf {} \;
+if [ ${CLEAN} -eq 1 ]; then
+  find ${TRASH} -maxdepth 1 -regex "${TRASH}/.+" -exec rm -rf {} \;
+else
+  find ${TRASH} -maxdepth 1 -regex "${TRASH}/.+" -ctime +30 -exec rm -rf {} \;
+fi
+
+#
