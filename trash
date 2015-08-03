@@ -1,9 +1,15 @@
 #!/bin/bash
 
+# home directory
 HOME=`echo ~`
+# trash directory
 TRASH="${HOME}/.Trash"
+# option string
 TARGET="$@"
+# first arg
 ARGS=(`echo "$@"`)
+
+# option value
 CLEAN=0
 
 if [ -z "${ARGS[0]}" ]; then
@@ -13,9 +19,11 @@ if [ -z "${ARGS[0]}" ]; then
   exit
 fi
 
-if [ "${ARGS[0]}" = "--clean" ]; then
-  CLEAN=1
-fi
+for arg in ${TARGET}; do
+  if [ "${arg}" = "--clean" ]; then
+    CLEAN=1
+  fi
+done
 
 if [ ! -d ${TRASH} ]; then
   mkdir ${TRASH}
@@ -28,7 +36,7 @@ for file in ${TARGET} ; do
       if [[ ${file} =~ ^(.*)\/$ ]]; then
         file=${BASH_REMATCH[1]}
       fi
-      if [[ ${file} =~ ^.*\/(.*?) ]]; then
+      if [[ ${file} =~ ^.*\/(.*) ]]; then
         file=${BASH_REMATCH[1]}
       fi
       fname=${file}
