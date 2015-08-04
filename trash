@@ -46,14 +46,14 @@ for file in ${TARGET} ; do
         loop=$((loop+1))
       done
       if [ -L ${org} ]; then
-        echo -e $'\e[35mThis file is a symbolic link , it will be removed: ${org}'
+        echo -e $'\e[35mThis file is a symbolic link , it will be removed: '${org}
         rm -rf ${org}
       else
-        echo -e $'\e[35m'${file}' is move to Trash.: ${fname}'
+        echo -e $'\e[35m'${file}' is move to Trash.: '${fname}
         mv -f ${org} "${TRASH}/${fname}"
       fi
     else
-      echo -e $'\e[35mfile not found: ${file}'
+      echo -e $'\e[35mfile not found: '${file}
     fi
   fi
 done
