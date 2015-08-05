@@ -60,7 +60,7 @@ done
 
 if [ ${CLEAN} -eq 1 ]; then
   find ${TRASH} -maxdepth 1 -regex "${TRASH}/.+" -exec rm -rf {} \;
-  echo -e $'\e[35mclean \".Trash\".'\e[00m'
+  echo -e $'\e[35mclean \".Trash\".\e[00m'
 else
   find ${TRASH} -maxdepth 1 -regex "${TRASH}/.+" -ctime +30 -exec rm -rf {} \;
 fi
