@@ -45,15 +45,13 @@ for file in ${TARGET} ; do
         fname="${file}.${loop}"
         loop=$((loop+1))
       done
-      if [ -L ${org} ]; then
-        echo -e $'\e[35mThis file is a symbolic link , it will be removed: '${org}'\e[00m'
-        rm -rf ${org}
-      else
-        echo -e $'\e[35m'${file}' is move to Trash.: '${fname}'\e[00m'
-        mv -f ${org} "${TRASH}/${fname}"
-      fi
+      echo -e $'\e[35m'${file}' is move to Trash.: '${fname}$'\e[00m'
+      mv -f ${org} "${TRASH}/${fname}"
+    elif [ -L ${file} ]; then
+        echo -e $'\e[35mThis file is a symbolic link , it will be removed: '${file}$'\e[00m'
+        rm -rf ${file}
     else
-      echo -e $'\e[35mfile not found: '${file}'\e[00m'
+      echo -e $'\e[35mfile not found: '${file}$'\e[00m'
     fi
   fi
 done
