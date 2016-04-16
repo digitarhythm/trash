@@ -13,9 +13,9 @@ ARGS=(`echo "$@"`)
 CLEAN=0
 
 if [ -z "${ARGS[0]}" ]; then
-  echo -e $'\e[35mUsage: trash [option] [delete file name]\e[00m'
-  echo -e $'\e[35moption:\e[00m'
-  echo -e $'\e[35m  --clean    delete all files in .Trash directory.\e[00m'
+  echo -e $'\e[35mUsage: trash [option] [delete file name]'
+  echo -e $'\e[35moption:'
+  echo -e $'\e[35m  --clean    delete all files in .Trash directory.'
   exit
 fi
 
@@ -45,22 +45,24 @@ for file in ${TARGET} ; do
         fname="${file}.${loop}"
         loop=$((loop+1))
       done
-      echo -e $'\e[35m'${file}' is move to Trash.: '${fname}$'\e[00m'
-      mv -f ${org} "${TRASH}/${fname}"
-    elif [ -L ${file} ]; then
-        echo -e $'\e[35mThis file is a symbolic link , it will be removed: '${file}$'\e[00m'
-        rm -rf ${file}
+      if [ -L ${org} ]; then
+        echo -e $'\e[35mThis file is a symbolic link , it will be removed: '${org}
+        rm -rf ${org}
+      else
+        echo -e $'\e[35m'${file}' is move to Trash.: '${fname}
+        mv -f ${org} "${TRASH}/${fname}"
+      fi
     else
-      echo -e $'\e[35mfile not found: '${file}$'\e[00m'
+      echo -e $'\e[35mfile not found: '${file}
     fi
   fi
 done
 
 if [ ${CLEAN} -eq 1 ]; then
   find ${TRASH} -maxdepth 1 -regex "${TRASH}/.+" -exec rm -rf {} \;
-  echo -e $'\e[35mclean \".Trash\".\e[00m'
+  echo -e $'\e[35mclean \".Trash\".'
 else
-  find ${TRASH} -maxdepth 1 -regex "${TRASH}/.+" -ctime +30 -exec rm -rf {} \;
+  find ${TRASH} -maxdepth 1 -regex "${TRASH}/.*" -mtime +30 -exec rm -rf {} \;
 fi
 
 #
